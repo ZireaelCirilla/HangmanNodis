@@ -1,9 +1,40 @@
 var http = require("http");
 var redis = require("redis");
 var client = redis.createClient(46379, "localhost");
+const { promisify } = require('util');
+const getAsync = promisify(client.hgetall).bind(client);
 
-http.createServer(function (request, response) {
+var createHash = require('hash-generator');
+var hashLength = 8;
 
+http.createServer(function (req, res) {
+    var url = req.url;
+    var method = req.method;
+    if (url === '/movies' && method === "GET") {
+        indexAllMovies().then(function (movies) {
+            if (movies != null || movies != undefined) {
+                var formatArr = [];
+                for (var key in movies) {
+                    formatArr.push(JSON.parse(movies[key]))
+                }
+                res.write(JSON.stringify(formatArr));
+            } else {
+                res.write("empty")
+            }
+            res.end();
+        });
+    } else if (url === '/movies' && method === "POST") {
+        req.on('data', function (chunk) {
+            console.log("Received body data:");
+            console.log(chunk.toString());
+            storeMovie(chunk.toString());
+        });
+        console.log(req.body);
+        res.end();
+    } else {
+        res.write('<h1>Hello World!<h1>');
+        res.end();
+    }
 }).listen(8080);
 
 client.on("error", function (err) {
@@ -14,20 +45,16 @@ client.on('connect', function () {
     console.log('connected');
 });
 
-
-function indexAllMovies() {
-
+async function indexAllMovies() {
+    return getAsync('movies')
 }
 
-function storeMovie(params) {
-    client.hmset(myhash, JSON.stringify(params), function (err, reply) {
-        if (!err) {
-            console.log(reply);
-        } else {
-            console.log(err);
-        }
+async function storeMovie(params) {
+    console.log(params);
+    await client.hmset("movies", createHash(hashLength), params, function (err, reply) {
+        console.log("reply: " + reply);
+        console.log("err: " + err);
     });
 }
 
-// Console will print the message
 console.log('Server running at localhost:8080');

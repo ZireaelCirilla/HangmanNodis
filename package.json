@@ -1,7 +1,7 @@
 {
-  "name": "docker_hang-man",
+  "name": "nodis_hang-man",
   "version": "1.0.0",
-  "description": "Node.js on Docker",
+  "description": "Node.js and Redis API",
   "author": "Zireael",
   "main": "server.js",
   "scripts": {
