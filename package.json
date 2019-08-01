@@ -1,0 +1,16 @@
+{
+  "name": "docker_hang-man",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "Zireael",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js localhost 8080"
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "hash-generator": "^0.1.0",
+    "nodemon": "^1.19.1",
+    "redis": "^2.8.0"
+  }
+}
