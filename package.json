@@ -8,7 +8,7 @@
     "start": "node server.js localhost 8080"
   },
   "dependencies": {
-    "express": "^4.16.1",
+    "express": "^4.17.3",
     "hash-generator": "^0.1.0",
     "nodemon": "^1.19.1",
     "redis": "^2.8.0"
